@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="使用 element-plus 的 Loading 组件的 service 制作全屏 loading 非常方便 12345678910111213let loadingInstance: LoadingInstance | null &#x3D; null;const createLoadingService &#x3D; () &#x3D;&gt; &#123;  loadingInstance &#x3D; ElLoading.se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Antd Spin组件的全屏loading">
+<meta property="og:url" content="https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/index.html">
+<meta property="og:site_name" content="Ryan Zhou Blog">
+<meta property="og:description" content="使用 element-plus 的 Loading 组件的 service 制作全屏 loading 非常方便 12345678910111213let loadingInstance: LoadingInstance | null &#x3D; null;const createLoadingService &#x3D; () &#x3D;&gt; &#123;  loadingInstance &#x3D; ElLoading.se">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-11-24T02:46:51.000Z">
+<meta property="article:modified_time" content="2023-11-24T03:14:27.598Z">
+<meta property="article:author" content="Ryan Zhou">
+<meta property="article:tag" content="antd,spin,loading,react">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>基于Antd Spin组件的全屏loading</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/11/18/react-select-all/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&text=基于Antd Spin组件的全屏loading"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&is_video=false&description=基于Antd Spin组件的全屏loading"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于Antd Spin组件的全屏loading&body=Check out this article: https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&name=基于Antd Spin组件的全屏loading&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&t=基于Antd Spin组件的全屏loading"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        基于Antd Spin组件的全屏loading
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Ryan Zhou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-11-24T02:46:51.000Z" class="dt-published" itemprop="datePublished">2023-11-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/antd-spin-loading-react/" rel="tag">antd,spin,loading,react</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>使用 element-plus 的 Loading 组件的 service 制作全屏 loading 非常方便</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="attr">loadingInstance</span>: <span class="title class_">LoadingInstance</span> | <span class="literal">null</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">createLoadingService</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  loadingInstance = <span class="title class_">ElLoading</span>.<span class="title function_">service</span>(&#123;</span><br><span class="line">    <span class="attr">fullscreen</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">text</span>: <span class="string">&#x27;加载中...&#x27;</span>,</span><br><span class="line">    <span class="attr">background</span>: <span class="string">&#x27;rgba(0, 0, 0, 0.8)&#x27;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">destroyLoadingInstance</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  loadingInstance!.<span class="title function_">close</span>();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>但是 antd 的 Spin 组件并没有提供类似的 service API，需要一些 hack 方法来达到全屏 loading 的效果。在 ts 文件中(注意：不是<code>tsx</code>文件)，是无法直接使用 React element 的写法的，如<code>&lt;component/&gt;，只能通过</code>React.createElement()&#96;方法创建组件。</p>
+<p>首先创建一个包裹元素作为 Spin 组件的父元素，卸载组件时直接从 DOM 上删除父元素即可</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在接口请求时创建spin组件</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">createFullscreenSpin</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> spinWrapper = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>)!;</span><br><span class="line">  spinWrapper.<span class="title function_">setAttribute</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;spin-wrapper&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(spinWrapper);</span><br><span class="line">  <span class="title function_">createRoot</span>(spinWrapper).<span class="title function_">render</span>(<span class="title class_">React</span>.<span class="title function_">createElement</span>(<span class="title class_">Spin</span>, &#123; <span class="attr">fullscreen</span>: <span class="literal">true</span>, <span class="attr">size</span>: <span class="string">&#x27;large&#x27;</span> &#125;));</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//全部接口请求结束 卸载spin组件</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">destroyFullscreenSpin</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> spinWrapper = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#spin-wrapper&#x27;</span>)!;</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">removeChild</span>(spinWrapper);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这里有一个缺陷，Spin 组件的<code>tip</code>属性必须使用在 nest pattern 中，所以直接在 props 中使用<code>tip</code>属性控制台会提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: [antd: Spin] `tip` only work in nest pattern.</span><br></pre></td></tr></table></figure>
+
+<p>而且通过报错信息定位到相关代码发现，<code>fullscreen</code>属性和<code>tip</code>不能同时存在</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isNestedPattern = <span class="title class_">React</span>.<span class="title function_">useMemo</span>(</span><br><span class="line">  <span class="function">() =&gt;</span> <span class="keyword">typeof</span> children !== <span class="string">&#x27;undefined&#x27;</span> &amp;&amp; !fullscreen,</span><br><span class="line">  [children, fullscreen]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>有两种解决办法：</p>
+<ol>
+<li>不添加<code>tip</code>属性，即，只有 loading 图片，没有文字 ☑️</li>
+<li>不设置<code>fullscreen</code>属性，然后通过自定义 CSS 控制 loading 的 sytle</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&text=基于Antd Spin组件的全屏loading"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&is_video=false&description=基于Antd Spin组件的全屏loading"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于Antd Spin组件的全屏loading&body=Check out this article: https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&title=基于Antd Spin组件的全屏loading"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&name=基于Antd Spin组件的全屏loading&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ryanzhouff.github.io/2023/11/24/antd-spin-fullscreen-loading/&t=基于Antd Spin组件的全屏loading"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    Ryan Zhou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
