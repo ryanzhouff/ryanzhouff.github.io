@@ -14,7 +14,7 @@
 <meta property="og:description" content="函数式编程，Functional Programming，简称 FP，是一种编程范式。  它将电脑运算视为函数运算，并且避免使用程序状态以及易变对象。其中，λ 演算（lambda calculus）为该语言最重要的基础。而且，λ 演算的函数可以接受函数当作输入（引数）和输出（传出值）。   比起指令式编程，函数式编程更加强调程序执行的结果而非执行的过程，倡导利用若干简单的执行单元让计算结果不断渐进">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-12-21T18:54:30.000Z">
-<meta property="article:modified_time" content="2023-12-21T18:55:10.770Z">
+<meta property="article:modified_time" content="2023-12-21T18:57:14.465Z">
 <meta property="article:author" content="Ryan Zhou">
 <meta property="article:tag" content="fp, functional programming">
 <meta name="twitter:card" content="summary">
@@ -111,7 +111,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC"><span class="toc-number">1.</span> <span class="toc-text">代码风格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources"><span class="toc-number">2.</span> <span class="toc-text">Resources</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC"><span class="toc-number">1.</span> <span class="toc-text">代码风格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pure-functions"><span class="toc-number">2.</span> <span class="toc-text">Pure functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">函数式编程特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Immutability"><span class="toc-number">3.1.</span> <span class="toc-text">Immutability</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Declarative-vs-imperative"><span class="toc-number">3.2.</span> <span class="toc-text">Declarative vs imperative</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">高阶函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E7%BB%84%E5%90%88"><span class="toc-number">3.4.</span> <span class="toc-text">函数组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources"><span class="toc-number">4.</span> <span class="toc-text">Resources</span></a></li></ol>
       </div>
     
   </span>
@@ -184,6 +184,41 @@
 <p>指令式：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> result = [];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; people.<span class="property">length</span>; i++) &#123;</span><br><span class="line">  <span class="keyword">const</span> p = people[i];</span><br><span class="line">  <span class="keyword">if</span> (p.<span class="property">age</span> &gt; <span class="number">35</span>) &#123;</span><br><span class="line">    result.<span class="title function_">push</span>(p.<span class="property">name</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="Pure-functions"><a href="#Pure-functions" class="headerlink" title="Pure functions"></a>Pure functions</h2><p>函数式编程语言中的纯粹(purity)指的就是纯函数。</p>
+<ol>
+<li>纯函数对相同的 input 总能产生相同的 output</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pure</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">square</span>(<span class="params">n: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> n * n;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// impure</span></span><br><span class="line"><span class="comment">// 引入了外部变量，会受到外部环境的影响</span></span><br><span class="line"><span class="keyword">const</span> someNumber = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">addSomeNumber</span>(<span class="params">n: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> +someNumber;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>纯函数没有 side effect</li>
+</ol>
+<p>不纯的函数：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">writeFile</span>(fileName);</span><br><span class="line"><span class="title function_">sendAjaxRequest</span>(ajaxRequest);</span><br><span class="line"><span class="title function_">openSocket</span>(ipAddress);</span><br></pre></td></tr></table></figure>
+
+<p>调用它们会修改文件，向服务器发送数据或者调用系统获取 socket，永远无法预测这些函数会返回什么。</p>
+<p>因为 pure function 的不可变性，它的结果是可预测，更容易 unit test</p>
+<p>函数式编程语言并不能彻底去除 side effect，只能限制它们。<br>如何处理 side effects? 使用 monad 把 impure 的部分放在程式边界，尽量让大部分 function 是 pure function</p>
+<h2 id="函数式编程特性"><a href="#函数式编程特性" class="headerlink" title="函数式编程特性"></a>函数式编程特性</h2><h3 id="Immutability"><a href="#Immutability" class="headerlink" title="Immutability"></a>Immutability</h3><p>函数式编程中没有变量</p>
+<p>FP 中避免使用 loop，尽量使用回调， loop 通常伴随着 mutation</p>
+<p>函数式编程的循环用递归实现</p>
+<h3 id="Declarative-vs-imperative"><a href="#Declarative-vs-imperative" class="headerlink" title="Declarative vs imperative"></a>Declarative vs imperative</h3><p>Declarative 的本质在于可以把代码转化成一个值(expression)</p>
+<h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><blockquote>
+<p>在函数式编程中，函数是语言的第一公民。换句话说，函数就是另一种值。</p>
+</blockquote>
+<p>因为函数是值，我们可以把它们当作值传入参数。</p>
+<blockquote>
+<p>高阶函数既可以接受函数作为参数传入，也可以把函数作为返回值返回，或者同时满足两个条件。</p>
+</blockquote>
+<p>限制函数的执行次数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">function lazy(fn, threshold=1) &#123;</span><br><span class="line">    let counter = 0;</span><br><span class="line"></span><br><span class="line">    return function (...args) &#123;</span><br><span class="line">        const context = this;</span><br><span class="line">        let result = null;</span><br><span class="line"></span><br><span class="line">        if (counter++ &gt;= threshold) &#123;</span><br><span class="line">            result = function noop() &#123;&#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            result = fn.apply(context, args);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="函数组合"><a href="#函数组合" class="headerlink" title="函数组合"></a>函数组合</h3><p>在数学中，f.g 是函数的组合，称为<strong>函数 f 与函数 g 的复合函数</strong>，或者说<strong>在 g 之后调用 f</strong>。所以<code>(f.g)(x)</code>相当于<code>x</code>为自变量调用函数 g，再以结果为自变量调用函数 f，简写成<code>f(g(x))</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// f.g.h =&gt; f(g(h))</span><br><span class="line">// compose(f, g, h)(arg) =&gt; f(g(h(arg)))</span><br><span class="line">function compose(...funcs) &#123;</span><br><span class="line">    // 函数入参</span><br><span class="line">    return function(...args) &#123;</span><br><span class="line">        // Array.isArray 参数可能有多个</span><br><span class="line">        return funcs.reduceRight((acc, fn) =&gt; Array.isArray(args) ? fn(...acc) : fn(acc), args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>管道机制（pipeline）的例子，即前一个函数的输出是后一个函数的输入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">pipeline</span> =</span><br><span class="line">  (<span class="params">...fns</span>) =&gt;</span><br><span class="line">  <span class="function"><span class="params">value</span> =&gt;</span></span><br><span class="line">    fns.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, current</span>) =&gt;</span> <span class="title function_">current</span>(prev), value);</span><br></pre></td></tr></table></figure>
+
 <h2 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/shfshanyue/fp-jargon-zh#point-free-style">函数式编程术语</a></li>
 <li><a target="_blank" rel="noopener" href="https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/">JavaScript 函数式编程指南</a> （书）</li>
@@ -219,7 +254,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC"><span class="toc-number">1.</span> <span class="toc-text">代码风格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources"><span class="toc-number">2.</span> <span class="toc-text">Resources</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC"><span class="toc-number">1.</span> <span class="toc-text">代码风格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pure-functions"><span class="toc-number">2.</span> <span class="toc-text">Pure functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">函数式编程特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Immutability"><span class="toc-number">3.1.</span> <span class="toc-text">Immutability</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Declarative-vs-imperative"><span class="toc-number">3.2.</span> <span class="toc-text">Declarative vs imperative</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">高阶函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E7%BB%84%E5%90%88"><span class="toc-number">3.4.</span> <span class="toc-text">函数组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Resources"><span class="toc-number">4.</span> <span class="toc-text">Resources</span></a></li></ol>
       </div>
     
 
