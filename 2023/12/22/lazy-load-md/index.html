@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="衡量应用的性能的重要的指标：  响应时间(Response time) 资源消耗(Resources Consumption)  响应时间：加载 web 应用和 UI 响应时间 资源消耗：人类是没有耐心的生物(心理学，妙啊)。如果页面加载时间超过 3 秒，70%的人会放弃。Web 应用不应该花费太多时间。 为什么要延迟加载 images 或 videos 而不是直接加载？因为有可能会加载用户看不到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化之懒加载">
+<meta property="og:url" content="https://ryanzhouff.github.io/2023/12/22/lazy-load-md/index.html">
+<meta property="og:site_name" content="Ryan Zhou Blog">
+<meta property="og:description" content="衡量应用的性能的重要的指标：  响应时间(Response time) 资源消耗(Resources Consumption)  响应时间：加载 web 应用和 UI 响应时间 资源消耗：人类是没有耐心的生物(心理学，妙啊)。如果页面加载时间超过 3 秒，70%的人会放弃。Web 应用不应该花费太多时间。 为什么要延迟加载 images 或 videos 而不是直接加载？因为有可能会加载用户看不到">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-12-21T18:39:45.000Z">
+<meta property="article:modified_time" content="2023-12-21T18:40:27.787Z">
+<meta property="article:author" content="Ryan Zhou">
+<meta property="article:tag" content="懒加载,lazy load">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.png">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>性能优化之懒加载</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/12/22/mobile-dev-md/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&text=性能优化之懒加载"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&is_video=false&description=性能优化之懒加载"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=性能优化之懒加载&body=Check out this article: https://ryanzhouff.github.io/2023/12/22/lazy-load-md/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&name=性能优化之懒加载&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&t=性能优化之懒加载"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8E%9F%E7%94%9F%E6%94%AF%E6%8C%81%E7%9A%84-lazy-loading"><span class="toc-number">1.</span> <span class="toc-text">浏览器原生支持的 lazy loading</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Intersection-Observer"><span class="toc-number">2.</span> <span class="toc-text">Intersection Observer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">第三方库</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        性能优化之懒加载
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Ryan Zhou</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-12-21T18:39:45.000Z" class="dt-published" itemprop="datePublished">2023-12-22</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E6%87%92%E5%8A%A0%E8%BD%BD-lazy-load/" rel="tag">懒加载,lazy load</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>衡量应用的性能的重要的指标：</p>
+<ul>
+<li>响应时间(Response time)</li>
+<li>资源消耗(Resources Consumption)</li>
+</ul>
+<p>响应时间：加载 web 应用和 UI 响应时间</p>
+<p>资源消耗：人类是没有耐心的生物(心理学，妙啊)。如果页面加载时间超过 3 秒，70%的人会放弃。Web 应用不应该花费太多时间。</p>
+<p>为什么要延迟加载 images 或 videos 而不是直接加载？因为有可能会加载用户看不到的内容</p>
+<p>实现延迟加载的方法：</p>
+<ul>
+<li>浏览器原生支持的 lazy loading</li>
+<li>intersection observer</li>
+</ul>
+<h2 id="浏览器原生支持的-lazy-loading"><a href="#浏览器原生支持的-lazy-loading" class="headerlink" title="浏览器原生支持的 lazy loading"></a>浏览器原生支持的 lazy loading</h2><p>使用<code>loading</code>属性</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;image.png&quot;</span> <span class="attr">loading</span>=<span class="string">&quot;lazy&quot;</span> <span class="attr">alt</span>=<span class="string">&quot;…&quot;</span> <span class="attr">width</span>=<span class="string">&quot;200&quot;</span> <span class="attr">height</span>=<span class="string">&quot;200&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Intersection-Observer"><a href="#Intersection-Observer" class="headerlink" title="Intersection Observer"></a>Intersection Observer</h2><p>需要延迟加载的图片元素如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span></span></span><br><span class="line"><span class="tag">  <span class="attr">class</span>=<span class="string">&quot;lazy&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">src</span>=<span class="string">&quot;placeholder-image.jpg&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">data-src</span>=<span class="string">&quot;image-to-lazy-load-1x.jpg&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">data-srcset</span>=<span class="string">&quot;image-to-lazy-load-2x.jpg 2x, image-to-lazy-load-1x.jpg 1x&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">alt</span>=<span class="string">&quot;I&#x27;m an image!&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>有几个点需要关注一下：</p>
+<ol>
+<li><code>class</code>属性，用于选择元素</li>
+<li><code>src</code>属性，初始图片是一张占位图片，并不是真实的图片</li>
+<li><code>data-src</code>和<code>data-srcset</code>属性，真实需要加载的图片</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DOM元素加载完成之后再获取img元素</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> lazyImages = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.lazy-loading-image&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> options = &#123;</span><br><span class="line">    <span class="attr">root</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">rootMargin</span>: <span class="string">&#x27;0px&#x27;</span>,</span><br><span class="line">    <span class="attr">threshold</span>: <span class="number">1</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!(<span class="string">&#x27;IntersectionObserver&#x27;</span> <span class="keyword">in</span> <span class="variable language_">window</span>)) &#123;</span><br><span class="line">    <span class="comment">// fallback to event handler</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> observer = <span class="keyword">new</span> <span class="title class_">IntersectionObserver</span>(<span class="function">(<span class="params">entries, self</span>) =&gt;</span> &#123;</span><br><span class="line">    entries.<span class="title function_">forEach</span>(<span class="function"><span class="params">entry</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (entry.<span class="property">isIntersecting</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> lazyImage = entry.<span class="property">target</span>;</span><br><span class="line">        lazyImage.<span class="property">src</span> = lazyImage.<span class="property">dataset</span>.<span class="property">src</span>;</span><br><span class="line">        <span class="comment">// lazyImage.srcset = lazyImage.dataset.srcset;</span></span><br><span class="line">        lazyImage.<span class="property">classList</span>.<span class="title function_">remove</span>(<span class="string">&#x27;lazy-loading-image&#x27;</span>);</span><br><span class="line">        observer.<span class="title function_">unobserve</span>(lazyImage);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, options);</span><br><span class="line"></span><br><span class="line">  lazyImages.<span class="title function_">forEach</span>(<span class="function"><span class="params">lazyImage</span> =&gt;</span> &#123;</span><br><span class="line">    observer.<span class="title function_">observe</span>(lazyImage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>对于背景图片，也是类似的处理</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;lazy-background&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Here&#x27;s a hero heading to get your attention!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">p</span>&gt;</span>Here&#x27;s hero copy to convince you to buy a thing!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;/buy-a-thing&quot;</span>&gt;</span>Buy a thing!<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 CSS 中，<code>lazy-background</code>默认是初始图片，然后添加<code>visible</code>类设置真正显示的图片</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.lazy-background</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&#x27;hero-placeholder.jpg&#x27;</span>); <span class="comment">/* Placeholder image */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.lazy-background</span><span class="selector-class">.visible</span> &#123;</span><br><span class="line">  <span class="attribute">background-image</span>: <span class="built_in">url</span>(<span class="string">&#x27;hero.jpg&#x27;</span>); <span class="comment">/* The final image */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后用 IntersectionObserver 检测元素是否在可视区域内</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> lazyBackgrounds = <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.lazy-background&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> options = &#123;</span><br><span class="line">    <span class="attr">root</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">rootMargin</span>: <span class="string">&#x27;0px&#x27;</span>,</span><br><span class="line">    <span class="attr">threshold</span>: <span class="number">1</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!(<span class="string">&#x27;IntersectionObserver&#x27;</span> <span class="keyword">in</span> <span class="variable language_">window</span>)) &#123;</span><br><span class="line">    <span class="comment">// fallback to event handler</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> observer = <span class="keyword">new</span> <span class="title class_">IntersectionObserver</span>(<span class="function">(<span class="params">entries, self</span>) =&gt;</span> &#123;</span><br><span class="line">    entries.<span class="title function_">forEach</span>(<span class="function"><span class="params">entry</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (entry.<span class="property">isIntersecting</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> lazyBackground = entry.<span class="property">target</span>;</span><br><span class="line">        lazyBackground.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;visible&#x27;</span>);</span><br><span class="line">        observer.<span class="title function_">unobserve</span>(lazyBackground);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;, options);</span><br><span class="line"></span><br><span class="line">  lazyBackgrounds.<span class="title function_">forEach</span>(<span class="function"><span class="params">lazyBackground</span> =&gt;</span> &#123;</span><br><span class="line">    observer.<span class="title function_">observe</span>(lazyBackground);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="第三方库"><a href="#第三方库" class="headerlink" title="第三方库"></a>第三方库</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/tuupola/lazyload">lazyload</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/twobin/react-lazyload">react-lazyload</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ApoorvSaxena/lozad.js">lozad</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%8E%9F%E7%94%9F%E6%94%AF%E6%8C%81%E7%9A%84-lazy-loading"><span class="toc-number">1.</span> <span class="toc-text">浏览器原生支持的 lazy loading</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Intersection-Observer"><span class="toc-number">2.</span> <span class="toc-text">Intersection Observer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">第三方库</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&text=性能优化之懒加载"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&is_video=false&description=性能优化之懒加载"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=性能优化之懒加载&body=Check out this article: https://ryanzhouff.github.io/2023/12/22/lazy-load-md/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&title=性能优化之懒加载"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&name=性能优化之懒加载&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ryanzhouff.github.io/2023/12/22/lazy-load-md/&t=性能优化之懒加载"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2023
+    Ryan Zhou
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
